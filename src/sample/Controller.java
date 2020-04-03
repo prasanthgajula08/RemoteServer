@@ -26,12 +26,19 @@ public class Controller implements Initializable {
     public Button closeButton;
     public Button minButton;
     public static boolean isRunning;
+    public java.awt.SystemTray tray;
+    public java.awt.TrayIcon trayIcon;
+
     ServerHandler serverHandler;
+    public int i;
     private static final String iconImageLoc = "http://icons.iconarchive.com/icons/oxygen-icons.org/oxygen/16/Places-server-database-icon.png";
 
     public void closeWindow(){
         if(isRunning) {
-            javax.swing.SwingUtilities.invokeLater(this::addAppToTray);
+            if(i==0) {
+                javax.swing.SwingUtilities.invokeLater(this::addAppToTray);
+                i++;
+            }
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "Server is still running! App is in system tray, You can close it there.", ButtonType.OK);
             alert.showAndWait();
 
@@ -60,11 +67,15 @@ public class Controller implements Initializable {
         isRunning = true;
         startButton.setVisible(false);
         stopButton.setVisible(true);
+
+        ipValue.setText(InetAddress.getLocalHost().getHostAddress()+":6970");
         sendReceiveLog.setText("Started Server....");
         BufferedReader br = new BufferedReader(new FileReader(passFile));
         String password = br.readLine();
         //write startserver code here
         serverHandler = new ServerHandler(password);
+
+        serverHandler = new ServerHandler("123");
         serverHandler.start();
     }
 
@@ -73,7 +84,7 @@ public class Controller implements Initializable {
         startButton.setVisible(true);
         stopButton.setVisible(false);
         sendReceiveLog.setText("Server stopped.");
-
+        tray.remove(trayIcon);
         //Write stopserver code here
         if(serverHandler!=null){
             serverHandler.end();
@@ -82,6 +93,7 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        i = 0;
         Platform.setImplicitExit(false);
 
         sample.Main.stage.initStyle(StageStyle.UNDECORATED);
@@ -126,12 +138,12 @@ public class Controller implements Initializable {
                 Platform.exit();
             }
 
-            java.awt.SystemTray tray = java.awt.SystemTray.getSystemTray();
+            tray = java.awt.SystemTray.getSystemTray();
             URL imageLoc = new URL(
                     iconImageLoc
             );
             java.awt.Image image = ImageIO.read(imageLoc);
-            java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image);
+            trayIcon = new java.awt.TrayIcon(image);
 
             trayIcon.addActionListener(event -> Platform.runLater(this::showStage));
 
