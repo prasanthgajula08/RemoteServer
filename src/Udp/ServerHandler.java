@@ -12,6 +12,11 @@ public class ServerHandler extends Thread {
 		serverAuthenticator.startAuthenticator(password);
 	}
 	public void end(){
-		serverAuthenticator.getStartedServer().stopServer();
+		try{
+			serverAuthenticator.getStartedServer().stopServer();
+		}catch (NullPointerException e){
+			System.out.println("No Connection Established");
+		}
+		serverAuthenticator.stopAuthenticator();
 	}
 }
