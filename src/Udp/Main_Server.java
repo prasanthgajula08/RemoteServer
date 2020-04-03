@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.SocketTimeoutException;
 
 public class Main_Server {
 	DatagramSocket datagramSocket;
@@ -16,6 +17,7 @@ public class Main_Server {
 		try{
 			System.out.println("ello");
 			datagramSocket = new DatagramSocket(6969);
+			datagramSocket.setSoTimeout(1000);
 			Robot robot = new Robot();
 			int max_buffer_size = 1024*59;
 			Rectangle rectangle = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
@@ -48,17 +50,6 @@ public class Main_Server {
 					byte[] dp_buffer = byteArrayOutputStream1.toByteArray();
 					DatagramPacket datagramPacket = new DatagramPacket(dp_buffer,dp_buffer.length,addr,port);
 					datagramSocket.send(datagramPacket);
-
-					//receiving acknowledgement
-					byte[] ack_data = new byte[1024];
-					DatagramPacket datagramPacket_ack = new DatagramPacket(ack_data,ack_data.length);
-					datagramSocket.receive(datagramPacket_ack);
-					System.out.println(datagramPacket_ack.getLength());
-					Data_Object ack_object = getdata_Object(datagramPacket_ack);
-					if(data_object.getType().equals("ack")){
-					}else{
-						System.out.println("Mismatch Occured !"+data_object.getType());
-					}
 				}
 			}
 		}catch (Exception e){
