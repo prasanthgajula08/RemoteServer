@@ -20,13 +20,13 @@ public class Controller {
     public void StartServer(ActionEvent actionEvent) throws UnknownHostException {
         startButton.setVisible(false);
         stopButton.setVisible(true);
-        ipValue.setText(InetAddress.getLocalHost().getHostAddress()+":6969");
+        ipValue.setText(InetAddress.getLocalHost().getHostAddress()+":6970");
         String password = GeneratePassword();
         sendReceiveLog.setText("Started Server....");
 
         //write startserver code here
 
-        serverHandler = new ServerHandler(password);
+        serverHandler = new ServerHandler("123");
         serverHandler.start();
     }
 
