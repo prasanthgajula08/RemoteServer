@@ -11,18 +11,18 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 public class Main_Server {
-	public static void main(String args[]){
+	DatagramSocket datagramSocket;
+	public  void startServer(DatagramPacket shake_datagramPacket){
 		try{
 			System.out.println("ello");
-			DatagramSocket datagramSocket = new DatagramSocket(6969);
+			datagramSocket = new DatagramSocket(6969);
 			Robot robot = new Robot();
 			int max_buffer_size = 1024*59;
 			Rectangle rectangle = new Rectangle(Toolkit.getDefaultToolkit().getScreenSize());
-			byte[] shake = new byte[6];
-			DatagramPacket shake_datagramPacket = new DatagramPacket(shake,shake.length);
-			datagramSocket.receive(shake_datagramPacket);
+
 			InetAddress addr= shake_datagramPacket.getAddress();
 			int port = shake_datagramPacket.getPort();
+
 			while(true){
 				BufferedImage bufferedImage = robot.createScreenCapture(rectangle);
 				ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -60,18 +60,21 @@ public class Main_Server {
 						System.out.println("Mismatch Occured !"+data_object.getType());
 					}
 				}
-
-
 			}
 		}catch (Exception e){
 			e.printStackTrace();
 		}
 	}
-	public static Data_Object getdata_Object(DatagramPacket datagramPacket) throws IOException, ClassNotFoundException {
+	public Data_Object getdata_Object(DatagramPacket datagramPacket) throws IOException, ClassNotFoundException {
 		byte[] data = datagramPacket.getData();
 		ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(data);
 		ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
 		Data_Object data_Object = (Data_Object) objectInputStream.readObject();
 		return data_Object;
+	}
+	public void stopServer(){
+		if(datagramSocket!=null){
+			datagramSocket.close();
+		}
 	}
 }
