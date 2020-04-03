@@ -68,14 +68,14 @@ public class Controller implements Initializable {
         startButton.setVisible(false);
         stopButton.setVisible(true);
 
-        ipValue.setText(InetAddress.getLocalHost().getHostAddress()+":6970");
+        ipValue.setText(InetAddress.getLocalHost().getHostAddress());
         sendReceiveLog.setText("Started Server....");
         BufferedReader br = new BufferedReader(new FileReader(passFile));
         String password = br.readLine();
         //write startserver code here
         serverHandler = new ServerHandler(password);
 
-        serverHandler = new ServerHandler("123");
+        serverHandler = new ServerHandler(passwordtf.getText());
         serverHandler.start();
     }
 
@@ -103,7 +103,7 @@ public class Controller implements Initializable {
         stopButton.setVisible(false);
         passFile = new File("password.txt");
         try {
-            ipValue.setText(InetAddress.getLocalHost().getHostAddress()+":6969");
+            ipValue.setText(InetAddress.getLocalHost().getHostAddress()+":6970");
         }
         catch (UnknownHostException e) {
             e.printStackTrace();
