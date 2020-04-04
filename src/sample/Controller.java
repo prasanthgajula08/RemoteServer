@@ -11,6 +11,7 @@ import javafx.stage.StageStyle;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.util.*;
@@ -93,6 +94,19 @@ public class Controller implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        try{
+            tray = java.awt.SystemTray.getSystemTray();
+            URL imageLoc = new URL(iconImageLoc);
+            java.awt.Image image = ImageIO.read(imageLoc);
+            trayIcon = new java.awt.TrayIcon(image);
+        }
+        catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
         i = 0;
         Platform.setImplicitExit(false);
 
@@ -138,13 +152,6 @@ public class Controller implements Initializable {
                 Platform.exit();
             }
 
-            tray = java.awt.SystemTray.getSystemTray();
-            URL imageLoc = new URL(
-                    iconImageLoc
-            );
-            java.awt.Image image = ImageIO.read(imageLoc);
-            trayIcon = new java.awt.TrayIcon(image);
-
             trayIcon.addActionListener(event -> Platform.runLater(this::showStage));
 
             java.awt.MenuItem openItem = new java.awt.MenuItem("PcRemoteServer");
@@ -167,7 +174,8 @@ public class Controller implements Initializable {
             trayIcon.setPopupMenu(popup);
 
             tray.add(trayIcon);
-        } catch (java.awt.AWTException | IOException e) {
+        }
+        catch (java.awt.AWTException e) {
             System.out.println("Unable to init system tray");
             e.printStackTrace();
         }
