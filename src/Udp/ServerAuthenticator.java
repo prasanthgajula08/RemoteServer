@@ -31,11 +31,6 @@ public class ServerAuthenticator {
 					byte[] reply = byteArrayOutputStream.toByteArray();
 					DatagramPacket reply_packet = new DatagramPacket(reply,reply.length,datagramPacket.getAddress(),datagramPacket.getPort());
 					datagramSocket.send(reply_packet);
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
 					main_server= new Main_Server();
 					main_server.startServer(datagramPacket);
 				}
